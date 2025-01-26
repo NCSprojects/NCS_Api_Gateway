@@ -5,6 +5,7 @@ import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.slf4j.LoggerFactory
+import org.springframework.cloud.client.loadbalancer.LoadBalanced
 import org.springframework.stereotype.Component
 
 import org.springframework.web.server.ServerWebExchange
@@ -27,7 +28,7 @@ import javax.crypto.SecretKey
 @Component
 class CustomFilter(
     private val env: Environment,
-    private val webClient: WebClient
+    @LoadBalanced private val webClient: WebClient
 ) : AbstractGatewayFilterFactory<CustomFilter.Config>(Config::class.java) {
 
     companion object {

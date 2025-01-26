@@ -19,17 +19,18 @@ class RoutesConfig( private val customFilter: CustomFilter) {
             path("/auth/**")
             uri("lb://auth")  // NestJS 애플리케이션의 URL (localhost:3000)
         }
-        route("users") {
-            path("/users/users")
-            uri("lb://auth")  // 예시로 실제 사용자 서비스 URI
+        route("user-verify") {
+            order(0) // 우선순위를 더 높게
+            path("/users/verify/**")
+            uri("lb://user")
+        }
+        route("user-general") {
+            order(1)
+            path("/users/**")
             filters {
-                // CustomFilter를 적용
                 filter(customFilter.apply(CustomFilter.Config()))
             }
-        }
-        route("users-without-filiter") {
-            path("/users/**")
-            uri("lb://auth")  // 예시로 실제 사용자 서비스 URI
+            uri("lb://user")
         }
     }
 }
