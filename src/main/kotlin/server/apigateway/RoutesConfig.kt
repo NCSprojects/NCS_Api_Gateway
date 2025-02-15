@@ -17,7 +17,7 @@ class RoutesConfig( private val customFilter: CustomFilter) {
         route("auth") {
             // "/auth"로 시작하는 모든 경로를 처리
             path("/auth/**")
-            uri("lb://auth")  // NestJS 애플리케이션의 URL (localhost:3000)
+            uri("lb://auth")
         }
         route("user-verify") {
             order(0) // 우선순위를 더 높게
@@ -31,6 +31,17 @@ class RoutesConfig( private val customFilter: CustomFilter) {
                 filter(customFilter.apply(CustomFilter.Config()))
             }
             uri("lb://user")
+        }
+        route("reservation") {
+            // "/reservation"로 시작하는 모든 경로를 처리
+            path("/reservation/**")
+            uri("lb://reservation")
+        }
+
+        route("content") {
+            // "/reservation"로 시작하는 모든 경로를 처리
+            path("/contents/**")
+            uri("lb://content")
         }
     }
 }

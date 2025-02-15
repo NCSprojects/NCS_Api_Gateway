@@ -66,7 +66,12 @@ class CustomFilter(
                     .bodyToMono(UserValidResponse::class.java)
                     .flatMap { userExists ->
                         if (userExists.valid) {
-                            chain.filter(exchange) // 사용자 존재하면 계속 진행
+                            val mutatedRequest = exchange.request.mutate()
+                                .header(HttpHeaders.AUTHORIZATION, "Bearer $jwt") // 다음 서비스로 JWT 전달
+                                .build()
+
+                            val mutatedExchange = exchange.mutate().request(mutatedRequest).build()
+                            chain.filter(mutatedExchange) // 수정된 요청을 다음 서비스로 전달
                         } else {
                             onError(exchange, "User not found", HttpStatus.UNAUTHORIZED) // 사용자 없으면 401 반환
                         }
