@@ -3,6 +3,7 @@ plugins {
     kotlin("plugin.spring") version "1.9.25"
     id("org.springframework.boot") version "3.4.0"
     id("io.spring.dependency-management") version "1.1.6"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.25"
 }
 
 group = "server"
@@ -35,7 +36,9 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-gateway")
     implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json")
     compileOnly("org.projectlombok:lombok")
+    runtimeOnly("io.netty:netty-resolver-dns-native-macos:4.1.115.Final:osx-aarch_64")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")

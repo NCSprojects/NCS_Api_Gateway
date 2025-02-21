@@ -4,6 +4,8 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
 import org.slf4j.LoggerFactory
 import org.springframework.cloud.client.loadbalancer.LoadBalanced
 import org.springframework.stereotype.Component
@@ -21,6 +23,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.server.reactive.ServerHttpResponse
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.server.ResponseStatusException
+import server.apigateway.dto.ApiResponse
 import server.apigateway.dto.UserValidResponse
 import java.nio.charset.StandardCharsets
 import javax.crypto.SecretKey
@@ -144,11 +147,28 @@ class CustomFilter(
     }
 
     // 에러 처리 담당
+//    private fun onError(exchange: ServerWebExchange, err: String, httpStatus: HttpStatus): Mono<Void> {
+//        val response: ServerHttpResponse = exchange.response
+//        response.statusCode = httpStatus
+//
+//        log.error(err)
+//        return response.setComplete()
+//    }
     private fun onError(exchange: ServerWebExchange, err: String, httpStatus: HttpStatus): Mono<Void> {
         val response: ServerHttpResponse = exchange.response
         response.statusCode = httpStatus
+        response.headers.contentType = org.springframework.http.MediaType.APPLICATION_JSON
+
+        val errorResponse = ApiResponse.error(httpStatus.value(), err, "Authentication Failed")
 
         log.error(err)
-        return response.setComplete()
+
+        return response.writeWith(
+            Mono.just(
+                response.bufferFactory().wrap(
+                    Json.encodeToString(serializer(), errorResponse).toByteArray(StandardCharsets.UTF_8)
+                )
+            )
+        )
     }
 }
