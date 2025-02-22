@@ -1,4 +1,4 @@
-package server.apigateway.filiter
+package server.apigateway.filter
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
@@ -125,7 +125,7 @@ class CustomFilter(
     }
 
     // JWT에서 'id' 추출
-    fun extractIdFromJwt(jwt: String): Int? {
+    fun extractIdFromJwt(jwt: String): String? {
         return try {
             val base64EncodedSecret = env.getProperty("jwt.secret") ?: "YTRmZWFjYWNmYjFkY2FkZWYxY2RkYmFkY2FkZmQwZjM0Zjd"
             val secretKey: SecretKey = Keys.hmacShaKeyFor(base64EncodedSecret.toByteArray(StandardCharsets.UTF_8))
@@ -135,12 +135,9 @@ class CustomFilter(
                 .build()
                 .parseSignedClaims(jwt)
 
-            val payload = jws.payload
-            // Claims 객체인 경우
-            val claims = payload as Claims
-            val randomId = claims["randomId"] as? Integer
-            randomId?.toInt()
+            val claims = jws.payload as Claims
 
+            claims["randomId"] as? String
         } catch (ex: Exception) {
             null
         }

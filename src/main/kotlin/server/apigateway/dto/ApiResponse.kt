@@ -13,9 +13,6 @@ data class ApiResponse<T>(
     val data: T? = null,
     val error: String? = null
 ) {
-    fun toJson(): String {
-        return Json.encodeToString(this) // ✅ serializer() 필요 없음
-    }
     companion object {
         fun <T> success(data: T, message: String = "요청이 성공적으로 처리되었습니다."): ApiResponse<T> {
             return ApiResponse("success", 200, message, data, null)
@@ -27,7 +24,6 @@ data class ApiResponse<T>(
     }
 }
 
-//// ✅ 제네릭 타입을 처리할 수 있도록 serializer() 사용
-//inline fun <reified T> ApiResponse<T>.toJson(): String {
-//    return Json.encodeToString(this)
-//}
+inline fun <reified T> ApiResponse<T>.toJson(): String {
+    return Json.encodeToString(this)
+}
