@@ -9,8 +9,6 @@ import org.springframework.cloud.gateway.config.HttpClientCustomizer
 
 @SpringBootApplication
 class ApiGatewayApplication
-{}
-
 fun main(args: Array<String>) {
     runApplication<ApiGatewayApplication>(*args)
 }

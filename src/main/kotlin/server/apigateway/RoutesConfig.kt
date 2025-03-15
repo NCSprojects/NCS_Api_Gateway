@@ -54,5 +54,12 @@ class RoutesConfig(
             }
             uri("lb://content")
         }
+        route("stats") {
+            path("/stats/**")
+            filters {
+                filter(customFilter.apply(CustomFilter.Config()))
+            }
+            uri("lb://stats")
+        }
     }
 }
